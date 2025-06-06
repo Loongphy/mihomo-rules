@@ -2,15 +2,21 @@ proxy-groups:
   - name: 🚀 默认
     type: select
     proxies: [🇭🇰 香港自动, 🇯🇵 日本自动, 🇺🇸 美国自动, 🇺🇸 美国, 🇭🇰 香港, 🇯🇵 日本, 🇹🇼 台湾, 🇸🇬 新加坡, 🌐 全部, DIRECT]
-  - name: Ⓜ️ Microsoft
-    type: select
-    proxies: [DIRECT, 🚀 默认, 🇭🇰 香港, 🇯🇵 日本, 🇹🇼 台湾, 🇸🇬 新加坡, 🇺🇸 美国, 🌐 全部]
+  - name: ⌨️ Cursor
+    type: url-test
+    include-all: true
+    tolerance: 100
+    interval: 300
+    filter: "(?=.*?(香港|港|HK|Hong Kong|Hongkong|HKSAR|日本|日(?!利亚)|Japan|Nippon|JP|Japanese)).*$"
   - name: 💬 OpenAI
     type: select
     proxies: [🇺🇸 美国]
+  - name: Ⓜ️ Microsoft
+    type: select
+    proxies: [DIRECT, 🚀 默认, 🇭🇰 香港, 🇯🇵 日本, 🇹🇼 台湾, 🇸🇬 新加坡, 🇺🇸 美国, 🌐 全部]
   - name: 🔍 Google
     type: select
-    proxies: [🇯🇵 日本自动, 🇸🇬 新加坡自动, 🇺🇸 美国, 🇺🇸 美国自动, 💬 OpenAI]
+    proxies: [🇭🇰 香港自动, 🇯🇵 日本自动, 🇸🇬 新加坡自动, 🇺🇸 美国自动, 🇺🇸 美国, 💬 OpenAI]
   - name: 📹 YouTube
     type: select
     proxies: [🚀 默认, 🇭🇰 香港, 🇯🇵 日本, 🇹🇼 台湾, 🇸🇬 新加坡, 🇺🇸 美国, 🌐 全部]
@@ -81,20 +87,26 @@ proxy-groups:
     include-all: true
     exclude-filter: "(?=.*?(流量|剩余|期|company-network|备用)).*$"
 
+
+listeners:
+  - { name: hk-port, type: mixed, port: 42000, proxy: 🇭🇰 香港自动 }
+  - { name: jp-port, type: mixed, port: 42001, proxy: 🇯🇵 日本自动 }
+
 rules:
   - GEOSITE,category-ads-all,REJECT
 
   - DOMAIN-SUFFIX,linux.do,🚀 默认
-  - DOMAIN-SUFFIX,cursor.sh,🚀 默认
-  - DOMAIN-SUFFIX,cursor.com,🚀 默认
+  - DOMAIN-SUFFIX, browserleaks.com, 🚀 默认
+
+  - DOMAIN-SUFFIX,cursor.sh,⌨️ Cursor
+  - DOMAIN-SUFFIX,cursor.com,⌨️ Cursor
+  - DOMAIN-SUFFIX,cursorapi.com,⌨️ Cursor
+
   - PROCESS-NAME,SunBrowser.exe, 🎭 Mask
   - PROCESS-NAME,chrome.exe, 🇺🇸 美国自动
 
-  # - DOMAIN-SUFFIX, browserleaks.com, 🚀 默认
-  - PROCESS-PATH,C:\Users\Loong\AppData\Local\Microsoft\Edge SxS\Application\msedge.exe,🚀 默认
-
   - GEOSITE,youtube,📹 YouTube # Google 规则包含 Youtube，需提前
-  - GEOSITE,google-gemini,💬 OpenAI # 下方 Google 规则中包含 Gemini，需要提高优先级
+  # - GEOSITE,google-gemini,🔍 Google # 下方 Google 规则中包含 Gemini，需要提高优先级
   - GEOIP,google,🔍 Google,no-resolve
   - GEOSITE,google,🔍 Google
   - GEOSITE,openai,💬 OpenAI
