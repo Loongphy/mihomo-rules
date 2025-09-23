@@ -1,6 +1,16 @@
-# Mihomo/Clash 分流规则
+# Mihomo 分流规则
 
 自用，仅作为学习用途，针对常用网站和软件分流。
+
+> [!CAUTION]
+> Cursor 使用 Claude 模型需开启 TUN 模式
+
+## DNS
+
+DNS 配置我更倾向于在客户端配置，目前使用的是：
+
+- 桌面端 [Sparkle](https://github.com/xishang0128/sparkle)
+- 安卓端 [FClash](https://github.com/chen08209/FlClash)
 
 ## 端口分流
 

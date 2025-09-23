@@ -1,0 +1,164 @@
+const main = (config) => {
+  config['proxy-groups'] = [
+    {
+      name: '🚀 默认',
+      type: 'select',
+      proxies: ['🇭🇰 香港自动', '🇯🇵 日本自动', '🇺🇸 美国自动', '🇺🇸 美国', '🇭🇰 香港', '🇯🇵 日本', '🇹🇼 台湾', '🇸🇬 新加坡', '🌐 全部', 'DIRECT']
+    },
+    {
+      name: 'Ⓜ️ Microsoft',
+      type: 'select',
+      proxies: ['🚀 默认', '🇭🇰 香港', '🇯🇵 日本', '🇹🇼 台湾', '🇸🇬 新加坡', '🇺🇸 美国自动', '🌐 全部', 'DIRECT']
+    },
+    {
+      name: '💬 OpenAI',
+      type: 'select',
+      proxies: ['🇺🇸 美国']
+    },
+    {
+      name: '🔍 Google',
+      type: 'select',
+      proxies: ['🇭🇰 香港', '🇯🇵 日本自动', '🇯🇵 日本', '🇸🇬 新加坡自动', '🇺🇸 美国', '🇺🇸 美国自动', '💬 OpenAI']
+    },
+    {
+      name: '📹 YouTube',
+      type: 'select',
+      proxies: ['🚀 默认', '🇭🇰 香港', '🇯🇵 日本', '🇹🇼 台湾', '🇸🇬 新加坡', '🇺🇸 美国', '🌐 全部']
+    },
+    {
+      name: '📲 Telegram',
+      type: 'select',
+      proxies: ['🚀 默认', '🇭🇰 香港', '🇯🇵 日本', '🇹🇼 台湾', '🇸🇬 新加坡', '🇺🇸 美国', '🌐 全部']
+    },
+    {
+      name: '🐦 X',
+      type: 'select',
+      proxies: ['🚀 默认', '🇭🇰 香港自动', '🇭🇰 香港', '🇯🇵 日本', '🇹🇼 台湾', '🇸🇬 新加坡', '🇺🇸 美国', '🌐 全部']
+    },
+    {
+      name: '📘 Facebook',
+      type: 'select',
+      proxies: ['🚀 默认', '🇭🇰 香港', '🇯🇵 日本', '🇹🇼 台湾', '🇸🇬 新加坡', '🇺🇸 美国', '🌐 全部']
+    },
+    {
+      name: '📷 Instagram',
+      type: 'select',
+      proxies: ['🚀 默认', '🇭🇰 香港', '🇯🇵 日本', '🇹🇼 台湾', '🇸🇬 新加坡', '🇺🇸 美国', '🌐 全部']
+    },
+    {
+      name: '💰 PayPal',
+      type: 'select',
+      proxies: ['🚀 默认', '🇭🇰 香港', '🇯🇵 日本', '🇹🇼 台湾', '🇸🇬 新加坡', '🇺🇸 美国', '🌐 全部', 'DIRECT']
+    },
+
+    {
+      name: '🇭🇰 香港自动',
+      type: 'url-test',
+      'include-all': true,
+      tolerance: 100,
+      interval: 300,
+      filter: "(?=.*?(香港|港|HK|Hong Kong|Hongkong|HKSAR)).*$",
+      'exclude-filter': "(?=.*?(下载|中转|链式)).*$"
+    },
+    {
+      name: '🇺🇸 美国',
+      type: 'select',
+      'include-all': true,
+      filter: "(?=.*?(美国|美|美利坚|US|USA|(?i)States|(?i)America)).*$"
+    },
+    {
+      name: '🇺🇸 美国自动',
+      type: 'url-test',
+      'include-all': true,
+      tolerance: 200,
+      interval: 300,
+      filter: "(?=.*?(美国|美|美利坚|US|USA|(?i)States|(?i)America)).*$",
+      'exclude-filter': "(?=.*?(下载|中转|链式)).*$"
+    },
+    {
+      name: '🇭🇰 香港',
+      type: 'select',
+      'include-all': true,
+      filter: "(?=.*?(香港|港|HK|Hong Kong|Hongkong|HKSAR)).*$"
+    },
+    {
+      name: '🇯🇵 日本',
+      type: 'select',
+      'include-all': true,
+      filter: "(?=.*?(日本|日(?!利亚)|Japan|Nippon|JP|Japanese)).*$"
+    },
+    {
+      name: '🇯🇵 日本自动',
+      type: 'url-test',
+      'include-all': true,
+      tolerance: 100,
+      interval: 300,
+      filter: "(?=.*?(日本|日(?!利亚)|Japan|Nippon|JP|Japanese)).*$",
+      'exclude-filter': "(?=.*?(下载|中转|链式)).*$"
+    },
+    {
+      name: '🇹🇼 台湾',
+      type: 'select',
+      'include-all': true,
+      filter: "(?=.*?(台湾|台|Taiwan|TW|ROC|Republic of China|Chinese Taipei)).*$"
+    },
+    {
+      name: '🇸🇬 新加坡',
+      type: 'select',
+      'include-all': true,
+      filter: "(?=.*?(新加坡|新|Singapore|SG|Singapura)).*$"
+    },
+    {
+      name: '🇸🇬 新加坡自动',
+      type: 'url-test',
+      'include-all': true,
+      tolerance: 200,
+      interval: 300,
+      filter: "(?=.*?(新加坡|新|Singapore|SG|Singapura)).*$",
+      'exclude-filter': "(?=.*?(下载|中转|链式)).*$"
+    },
+    {
+      name: '🌐 全部',
+      type: 'select',
+      'include-all': true,
+      'exclude-filter': "(?=.*?(流量|剩余|期|company-network|备用)).*$"
+    }
+  ];
+
+  config['rules'] = [
+    'GEOSITE, category-ads-all,REJECT',
+    'DOMAIN-SUFFIX, mcdn.bilivideo.cn, REJECT',  // B站 MSDN
+    'DOMAIN-SUFFIX, mcdn.bilivideo.com, REJECT', // B站 MCDN
+    'DOMAIN-SUFFIX, szbdyd.com,REJECT',          // B站 PCDN
+    
+    'DOMAIN-SUFFIX,linux.do,🚀 默认',
+    'DOMAIN-SUFFIX, browserleaks.com, 🚀 默认',
+    
+    'GEOSITE,youtube,📹 YouTube',
+    'GEOSITE,google-gemini,💬 OpenAI',
+    'GEOIP,google,🔍 Google,no-resolve',
+    'GEOSITE,google,🔍 Google',
+    'GEOSITE,openai,💬 OpenAI',
+    'GEOSITE,category-ai-!cn,💬 OpenAI',
+    'GEOSITE,microsoft,Ⓜ️ Microsoft',
+    'GEOSITE,x,🐦 X',
+    'GEOIP,twitter,🐦 X,no-resolve',
+    'GEOSITE,apple@cn,DIRECT',
+    'GEOIP,apple,DIRECT,no-resolve',
+    'GEOSITE,steam@cn,DIRECT',
+    'GEOSITE,category-games@cn,DIRECT',
+    'GEOSITE,telegram,📲 Telegram',
+    'GEOIP,telegram,📲 Telegram,no-resolve',
+    'GEOSITE,facebook,📘 Facebook',
+    'GEOIP,facebook,📘 Facebook,no-resolve',
+    'GEOSITE,instagram,📷 Instagram',
+    'GEOSITE,paypal,💰 PayPal',
+    'GEOIP,private,DIRECT,no-resolve',
+    'GEOSITE,private,DIRECT',
+    'GEOIP,CN,DIRECT,no-resolve',
+    'GEOSITE,cn,DIRECT',
+    'MATCH,🚀 默认'
+  ];
+
+  return config;
+}
