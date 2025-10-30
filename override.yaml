@@ -1,7 +1,7 @@
 proxy-groups:
   - name: 🚀 默认
     type: select
-    proxies: [🇭🇰 香港自动, 🇯🇵 日本自动, 🇺🇸 美国自动, 🇺🇸 美国, 🇭🇰 香港, 🇯🇵 日本, 🇹🇼 台湾, 🇸🇬 新加坡, 🌐 全部, DIRECT]
+    proxies: [🇭🇰 香港自动, 🇯🇵 日本自动, 🇺🇸 美国自动, 🇺🇸 美国, 🇭🇰 香港, 🇯🇵 日本, 🇨🇳 台湾, 🇸🇬 新加坡, 🌐 全部, DIRECT]
 
   - name: ⌨️ AI Editor
     type: url-test
@@ -13,19 +13,19 @@ proxy-groups:
 
   - name: 💬 OpenAI
     type: select
-    proxies: [🇺🇸 美国]
+    proxies: [🇺🇸 美国, 🇯🇵 日本, 🇸🇬 新加坡, 🌐 全部]
 
   - name: Ⓜ️ Microsoft
     type: select
-    proxies: [DIRECT, 🚀 默认, 🇭🇰 香港, 🇯🇵 日本, 🇹🇼 台湾, 🇸🇬 新加坡, 🇺🇸 美国, 🇺🇸 美国自动, 🌐 全部]
+    proxies: [🇺🇸 美国自动, DIRECT, 🚀 默认, 🇭🇰 香港, 🇯🇵 日本, 🇨🇳 台湾, 🇸🇬 新加坡, 🇺🇸 美国, 🌐 全部]
 
   - name: 🔍 Google
     type: select
-    proxies: [🇭🇰 香港自动, 🇯🇵 日本自动, 🇸🇬 新加坡自动, 🇺🇸 美国自动, 🇺🇸 美国, 💬 OpenAI]
+    proxies: [🇺🇸 美国自动, 🇭🇰 香港自动, 🇯🇵 日本自动, 🇸🇬 新加坡自动,  🇺🇸 美国, 💬 OpenAI]
 
   - name: 📹 YouTube
     type: select
-    proxies: [🚀 默认, 🇭🇰 香港, 🇯🇵 日本, 🇹🇼 台湾, 🇸🇬 新加坡, 🇺🇸 美国, 🌐 全部]
+    proxies: [🚀 默认, 🇭🇰 香港, 🇯🇵 日本, 🇨🇳 台湾, 🇸🇬 新加坡, 🇺🇸 美国, 🌐 全部]
 
   - name: 🎭 Mask
     type: select
@@ -33,23 +33,23 @@ proxy-groups:
 
   - name: 📲 Telegram
     type: select
-    proxies: [🚀 默认, 🇭🇰 香港, 🇯🇵 日本, 🇹🇼 台湾, 🇸🇬 新加坡, 🇺🇸 美国, 🌐 全部]
+    proxies: [🚀 默认, 🇭🇰 香港, 🇯🇵 日本, 🇨🇳 台湾, 🇸🇬 新加坡, 🇺🇸 美国, 🌐 全部]
 
   - name: 🐦 X
     type: select
-    proxies: [🚀 默认, 🇭🇰 香港自动, 🇭🇰 香港, 🇯🇵 日本, 🇹🇼 台湾, 🇸🇬 新加坡, 🇺🇸 美国, 🌐 全部]
+    proxies: [🚀 默认, 🇭🇰 香港自动, 🇭🇰 香港, 🇯🇵 日本, 🇨🇳 台湾, 🇸🇬 新加坡, 🇺🇸 美国, 🌐 全部]
 
   - name: 📘 Facebook
     type: select
-    proxies: [🚀 默认, 🇭🇰 香港, 🇯🇵 日本, 🇹🇼 台湾, 🇸🇬 新加坡, 🇺🇸 美国, 🌐 全部]
+    proxies: [🚀 默认, 🇭🇰 香港, 🇯🇵 日本, 🇨🇳 台湾, 🇸🇬 新加坡, 🇺🇸 美国, 🌐 全部]
 
   - name: 📷 Instagram
     type: select
-    proxies: [🚀 默认, 🇭🇰 香港, 🇯🇵 日本, 🇹🇼 台湾, 🇸🇬 新加坡, 🇺🇸 美国, 🌐 全部]
+    proxies: [🚀 默认, 🇭🇰 香港, 🇯🇵 日本, 🇨🇳 台湾, 🇸🇬 新加坡, 🇺🇸 美国, 🌐 全部]
 
   - name: 💰 PayPal
     type: select
-    proxies: [🚀 默认, 🇭🇰 香港, 🇯🇵 日本, 🇹🇼 台湾, 🇸🇬 新加坡, 🇺🇸 美国, 🌐 全部, DIRECT]
+    proxies: [DIRECT, 🚀 默认, 🇭🇰 香港, 🇯🇵 日本, 🇨🇳 台湾, 🇸🇬 新加坡, 🇺🇸 美国, 🌐 全部]
 
   - name: 🇭🇰 香港自动
     type: url-test
@@ -90,7 +90,7 @@ proxy-groups:
     filter: "(?=.*?(日本|日(?!利亚)|Japan|Nippon|JP|Japanese)).*$"
     exclude-filter: "(?=.*?(下载|链式|中转)).*$"
 
-  - name: 🇹🇼 台湾
+  - name: 🇨🇳 台湾
     type: select
     include-all: true
     filter: "(?=.*?(台湾|台|Taiwan|TW|ROC|Republic of China|Chinese Taipei)).*$"
@@ -119,34 +119,46 @@ listeners:
   - { name: jp-port, type: mixed, port: 42001, proxy: 🇯🇵 日本自动 }
 
 rules:
-  - GEOSITE,category-ads-all,REJECT
+  - GEOSITE,category-ads-all,REJECT # 对移动端也有一些效果，比如起点的广告
   - DOMAIN-SUFFIX,mcdn.bilivideo.com,REJECT
   - DOMAIN-SUFFIX,mcdn.bilivideo.cn,REJECT
   - DOMAIN-SUFFIX,szbdyd.com,REJECT
+
+  # 数字域名一般都不是啥正经网站，统一走代理
+  - DOMAIN-REGEX, ^\d+\.xyz$, 🚀 默认
   
   - DOMAIN-SUFFIX, linux.do,🚀 默认
-  - DOMAIN-SUFFIX, veloera.org,🚀 默认
-  - DOMAIN-SUFFIX, browserleaks.com, 🚀 默认
+  - DOMAIN-SUFFIX, browserleaks.com, 🚀 默认 # 不配置测试的时候会内存泄漏，因为上游 GEOSITE 把它 GEOSITE:CN
   - DOMAIN-SUFFIX, npmjs.org, 🚀 默认
+  - DOMAIN-SUFFIX, diabrowser.com, 🇺🇸 美国自动
+  - DOMAIN-SUFFIX, slack.com, 🇺🇸 美国自动
 
+  # 指纹浏览器
+  - PROCESS-NAME,AdsPower Global.exe, 🎭 Mask
   - PROCESS-NAME,SunBrowser.exe, 🎭 Mask
   - PROCESS-NAME,roxynet.exe, 🎭 Mask
-  - PROCESS-NAME,chrome.exe, 🔍 Google
-
+  
+  # AI 产品
+  - PROCESS-NAME, comet.exe, 💬 OpenAI
   - DOMAIN-SUFFIX, cerebras.ai, 💬 OpenAI
   - DOMAIN-SUFFIX, modal.com, 💬 OpenAI
+  - DOMAIN-SUFFIX, factory.ai, 💬 OpenAI
+  - DOMAIN-SUFFIX, api.jetbrains.ai, 💬 OpenAI
 
-  # Cursor 使用 Claude 模型需开启 TUN 模式
-  - DOMAIN-SUFFIX,cursor-cdn.com,⌨️ AI Editor
-  - DOMAIN-SUFFIX,cursor.com,⌨️ AI Editor
+  # Cursor 交由 Proxifier 处理，这样 Mihomo 就不必开启 TUN
   - DOMAIN-SUFFIX,cursor.sh,⌨️ AI Editor
+  - DOMAIN-SUFFIX,cursor.com,⌨️ AI Editor
   - DOMAIN-SUFFIX,cursorapi.com,⌨️ AI Editor
-  - PROCESS-NAME,cursor.exe,⌨️ AI Editor
+  - DOMAIN-SUFFIX,cursor-cdn.com,⌨️ AI Editor
+  - DOMAIN-SUFFIX,cursorapi.com,⌨️ AI Editor
   - DOMAIN-SUFFIX,augmentcode.com,⌨️ AI Editor
+  - DOMAIN-SUFFIX,codeium.com,⌨️ AI Editor
+
+  - DOMAIN-REGEX,\.gov$,🇺🇸 美国自动
 
   - GEOSITE,youtube,📹 YouTube # Google 规则包含 Youtube，需提前
   # - GEOSITE,google-gemini,🔍 Google # 下方 Google 规则中包含 Gemini，需要提高优先级
-  - GEOIP,google,🔍 Google,no-resolve # Google 建议统一使用 US 地址，否则 AI Studio 或 gemini.google 可能存在问题
+  - GEOIP,google,🔍 Google,no-resolve
   - GEOSITE,google,🔍 Google
   - GEOSITE,openai,💬 OpenAI
   - GEOSITE,category-ai-!cn,💬 OpenAI
@@ -163,6 +175,8 @@ rules:
   - GEOIP,facebook,📘 Facebook,no-resolve
   - GEOSITE,instagram,📷 Instagram
   - GEOSITE,paypal,💰 PayPal
+
+  - PROCESS-NAME,chrome.exe, 🇺🇸 美国自动 # 作为日常使用的软件（chrome, helium.computer），先尊重规则，再兜底
 
   - GEOIP,private,DIRECT,no-resolve
   - GEOSITE,private,DIRECT
