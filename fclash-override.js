@@ -3,7 +3,7 @@ const main = (config) => {
     {
       name: '🚀 默认',
       type: 'select',
-      proxies: ['🇭🇰 香港自动', '🇯🇵 日本自动', '🇺🇸 美国自动', '🇺🇸 美国', '🇭🇰 香港', '🇯🇵 日本', '🇹🇼 台湾', '🇸🇬 新加坡', '🌐 全部', 'DIRECT']
+      proxies: ['💸 低倍率自动', '🇭🇰 香港自动', '🇯🇵 日本自动', '🇺🇸 美国自动', '🇺🇸 美国', '🇭🇰 香港', '🇯🇵 日本', '🇹🇼 台湾', '🇸🇬 新加坡', '🌐 全部', 'DIRECT']
     },
     {
       name: 'Ⓜ️ Microsoft',
@@ -50,7 +50,15 @@ const main = (config) => {
       type: 'select',
       proxies: ['🚀 默认', '🇭🇰 香港', '🇯🇵 日本', '🇹🇼 台湾', '🇸🇬 新加坡', '🇺🇸 美国', '🌐 全部', 'DIRECT']
     },
-
+    {
+      "name": "💸 低倍率自动",
+      "type": "url-test",
+      "include-all": true,
+      "tolerance": 100,
+      "interval": 300,
+      "filter": "(?i)(?=.*?(0\\.\\d+\\s*(x|倍)|x\\s*0\\.\\d+)).*$",
+      "exclude-filter": "(?=.*?(下载|送中|中转)).*$"
+    },
     {
       name: '🇭🇰 香港自动',
       type: 'url-test',

@@ -1,14 +1,15 @@
 proxy-groups:
   - name: 🚀 默认
     type: select
-    proxies: [🇭🇰 香港自动, 🇯🇵 日本自动, 🇺🇸 美国自动, 🇺🇸 美国, 🇭🇰 香港, 🇯🇵 日本, 🇨🇳 台湾, 🇸🇬 新加坡, 🌐 全部, DIRECT]
+    proxies: [💸 低倍率自动, 🇭🇰 香港自动, 🇯🇵 日本自动, 🇺🇸 美国自动, 🇺🇸 美国, 🇭🇰 香港, 🇯🇵 日本, 🇨🇳 台湾, 🇸🇬 新加坡, 🌐 全部, DIRECT]
 
   - name: ⌨️ AI Editor
     type: url-test
     include-all: true
-    tolerance: 100
-    interval: 300
-    filter: "(?=.*?(香港|港|HK|Hong Kong|Hongkong|HKSAR|日本|日(?!利亚)|Japan|Nippon|JP|Japanese)).*$"
+    tolerance: 350
+    interval: 100
+    url: https://api2.cursor.sh
+    filter: "(?=.*?(香港|港|HK|Hong Kong|Hongkong|HKSAR|澳门|日本|日(?!利亚)|Japan|Nippon|JP|Japanese|台湾|台|Taiwan|TW|新加坡|新|Singapore|SG|Singapura)).*$"
     exclude-filter: "(?=.*?(下载|链式|中转)).*$"
 
   - name: 💬 OpenAI
@@ -25,7 +26,7 @@ proxy-groups:
 
   - name: 📹 YouTube
     type: select
-    proxies: [🚀 默认, 🇭🇰 香港, 🇯🇵 日本, 🇨🇳 台湾, 🇸🇬 新加坡, 🇺🇸 美国, 🌐 全部]
+    proxies: [🚀 默认, 🇭🇰 香港, 🇯🇵 日本, 🇨🇳 台湾, 🇸🇬 新加坡, 🇺🇸 美国, 🇺🇸 美国自动, 🌐 全部]
 
   - name: 🎭 Mask
     type: select
@@ -37,7 +38,7 @@ proxy-groups:
 
   - name: 🐦 X
     type: select
-    proxies: [🚀 默认, 🇭🇰 香港自动, 🇭🇰 香港, 🇯🇵 日本, 🇨🇳 台湾, 🇸🇬 新加坡, 🇺🇸 美国, 🌐 全部]
+    proxies: [🚀 默认, 🇭🇰 香港自动, 🇸🇬 新加坡自动, 🇭🇰 香港, 🇯🇵 日本, 🇨🇳 台湾, 🇸🇬 新加坡, 🇺🇸 美国, 🌐 全部]
 
   - name: 📘 Facebook
     type: select
@@ -51,13 +52,26 @@ proxy-groups:
     type: select
     proxies: [DIRECT, 🚀 默认, 🇭🇰 香港, 🇯🇵 日本, 🇨🇳 台湾, 🇸🇬 新加坡, 🇺🇸 美国, 🌐 全部]
 
+  - name: 💸 低倍率自动
+    type: url-test
+    include-all: true
+    tolerance: 100
+    interval: 300
+    filter: "(?i)(?=.*?(0\\.\\d+\\s*(x|倍)|x\\s*0\\.\\d+)).*$"
+    exclude-filter: "(?=.*?(下载|送中|中转)).*$"
+
+  - name: 🇭🇰 香港
+    type: select
+    include-all: true
+    filter: "(?=.*?(香港|港|HK|Hong Kong|Hongkong|HKSAR)).*$"
+
   - name: 🇭🇰 香港自动
     type: url-test
     include-all: true
     tolerance: 100
     interval: 300
     filter: "(?=.*?(香港|港|HK|Hong Kong|Hongkong|HKSAR)).*$"
-    exclude-filter: "(?=.*?(下载|链式|中转)).*$"
+    exclude-filter: "(?=.*?(下载|链式|中转|美国)).*$"
 
   - name: 🇺🇸 美国
     type: select
@@ -70,12 +84,7 @@ proxy-groups:
     tolerance: 200
     interval: 300
     filter: "(?=.*?(美国|美|美利坚|US|USA|(?i)States|(?i)America)).*$"
-    exclude-filter: "(?=.*?(下载|链式|中转)).*$"
-
-  - name: 🇭🇰 香港
-    type: select
-    include-all: true
-    filter: "(?=.*?(香港|港|HK|Hong Kong|Hongkong|HKSAR)).*$"
+    exclude-filter: "(?=.*?(下载|链式|中转|送中)).*$"
 
   - name: 🇯🇵 日本
     type: select
@@ -88,12 +97,7 @@ proxy-groups:
     tolerance: 100
     interval: 300
     filter: "(?=.*?(日本|日(?!利亚)|Japan|Nippon|JP|Japanese)).*$"
-    exclude-filter: "(?=.*?(下载|链式|中转)).*$"
-
-  - name: 🇨🇳 台湾
-    type: select
-    include-all: true
-    filter: "(?=.*?(台湾|台|Taiwan|TW|ROC|Republic of China|Chinese Taipei)).*$"
+    exclude-filter: "(?=.*?(下载|链式|中转|送中)).*$"
 
   - name: 🇸🇬 新加坡
     type: select
@@ -106,44 +110,104 @@ proxy-groups:
     tolerance: 200
     interval: 300
     filter: "(?=.*?(新加坡|新|Singapore|SG|Singapura)).*$"
-    exclude-filter: "(?=.*?(下载|链式|中转)).*$"
+    exclude-filter: "(?=.*?(下载|链式|中转|送中)).*$"
+
+  - name: 🇨🇳 台湾
+    type: select
+    include-all: true
+    filter: "(?=.*?(台湾|台|Taiwan|TW|Chinese Taipei)).*$"
+
+  - name: 🇮🇳 印度
+    type: select
+    include-all: true
+    filter: "(?=.*?(印度|India|Mumbai|Bombay|孟买|Delhi|New Delhi|德里|Bangalore|Bengaluru|班加罗尔|Chennai|Madras|金奈|Hyderabad|海得拉巴|Kolkata|Calcutta|加尔各答|Pune|浦那|Ahmedabad|艾哈迈达巴德|IN-)).*$"
+
+  - name: ⏬ 下载
+    type: fallback
+    include-all: true
+    tolerance: 350
+    interval: 100
+    url: https://api2.cursor.sh
+    filter: "(?=.*?(下载)).*$"
 
   - name: 🌐 全部
     type: select
     include-all: true
     exclude-filter: "(?=.*?(流量|剩余|期|company-network|备用)).*$"
 
+# 在原有的节点上手动增加一些节点
++proxies:
+  - name: US VPS
+    type: vless
+    server: 1.2.3.4
+    port: 1234
+    uuid: 75a3d74c-8f4e-4b2e-9c1f-3e7a8b2d5c9e
+    tls: true
+    client-fingerprint: chrome
+    servername: aws.amazon.com
+    network: tcp
+    reality-opts:
+      public-key: 123456
+    tfo: false
+    skip-cert-verify: false
+    flow: xtls-rprx-vision
 
+# 自定义监听端口，方便指纹浏览器指定代理
 listeners:
+  - { name: us-port, type: mixed, port: 39999, proxy: 🇺🇸 美国 }
   - { name: hk-port, type: mixed, port: 42000, proxy: 🇭🇰 香港自动 }
   - { name: jp-port, type: mixed, port: 42001, proxy: 🇯🇵 日本自动 }
 
 rules:
-  - GEOSITE,category-ads-all,REJECT # 对移动端也有一些效果，比如起点的广告
+  - GEOSITE,category-ads-all,REJECT
+  # - PROCESS-NAME,QQEX.exe, REJECT
   - DOMAIN-SUFFIX,mcdn.bilivideo.com,REJECT
   - DOMAIN-SUFFIX,mcdn.bilivideo.cn,REJECT
   - DOMAIN-SUFFIX,szbdyd.com,REJECT
+  - DOMAIN-SUFFIX,apple.com,DIRECT
+  - DOMAIN-SUFFIX,myhuaweicloud.com,DIRECT
 
   # 数字域名一般都不是啥正经网站，统一走代理
   - DOMAIN-REGEX, ^\d+\.xyz$, 🚀 默认
   
+  # 自用的一些产品
   - DOMAIN-SUFFIX, linux.do,🚀 默认
-  - DOMAIN-SUFFIX, browserleaks.com, 🚀 默认 # 不配置测试的时候会内存泄漏，因为上游 GEOSITE 把它 GEOSITE:CN
+
+  - DOMAIN-SUFFIX, browserleaks.com, 🚀 默认
   - DOMAIN-SUFFIX, npmjs.org, 🚀 默认
-  - DOMAIN-SUFFIX, diabrowser.com, 🇺🇸 美国自动
-  - DOMAIN-SUFFIX, slack.com, 🇺🇸 美国自动
 
   # 指纹浏览器
   - PROCESS-NAME,AdsPower Global.exe, 🎭 Mask
-  - PROCESS-NAME,SunBrowser.exe, 🎭 Mask
+  - PROCESS-NAME,HotLogin.exe, 🎭 Mask
   - PROCESS-NAME,roxynet.exe, 🎭 Mask
+  # - PROCESS-NAME,RoxyBrowser.exe, 🎭 Mask
   
   # AI 产品
-  - PROCESS-NAME, comet.exe, 💬 OpenAI
+  - PROCESS-NAME,  comet.exe, 💬 OpenAI
+  # - DOMAIN-SUFFIX, kimi.com, 💬 OpenAI
   - DOMAIN-SUFFIX, cerebras.ai, 💬 OpenAI
   - DOMAIN-SUFFIX, modal.com, 💬 OpenAI
   - DOMAIN-SUFFIX, factory.ai, 💬 OpenAI
   - DOMAIN-SUFFIX, api.jetbrains.ai, 💬 OpenAI
+  - DOMAIN-SUFFIX, minimaxi.com, 💬 OpenAI
+  - DOMAIN-SUFFIX, lmarena.ai, 🎭 Mask
+  - DOMAIN-SUFFIX, diabrowser.com, 🇺🇸 美国自动
+  - DOMAIN-SUFFIX, slack.com, 🇺🇸 美国自动
+  - DOMAIN-SUFFIX, perplexity.ai, 🇺🇸 美国
+  # Xiaomi mimo Studio
+  # - AND,((PROCESS-NAME,msedge.exe),(DOMAIN-SUFFIX,xiaomi.com)),🚀 默认
+  # - AND,((PROCESS-NAME,msedge.exe),(DOMAIN-SUFFIX,xiaomimimo.com)),🚀 默认
+
+  # Hugging Face
+  # Hugging Face 主站/接口
+  # hf.co（git clone / 跳转等也会用到）
+  - DOMAIN-SUFFIX,hf.co, ⏬ 下载
+  # 下载 CDN（会出现 cdn-lfs.* 的各种区域前缀）
+  - DOMAIN-KEYWORD,cdn-lfs, ⏬ 下载
+  # Xet 存储后端相关（常见 cas-bridge.xethub.hf.co 等）
+  - DOMAIN-KEYWORD,xethub, ⏬ 下载
+  # Hugging Face 镜像站
+  - DOMAIN-KEYWORD,hf-mirror.com, DIRECT
 
   # Cursor 交由 Proxifier 处理，这样 Mihomo 就不必开启 TUN
   - DOMAIN-SUFFIX,cursor.sh,⌨️ AI Editor
@@ -157,9 +221,8 @@ rules:
   - DOMAIN-REGEX,\.gov$,🇺🇸 美国自动
 
   - GEOSITE,youtube,📹 YouTube # Google 规则包含 Youtube，需提前
-  # - GEOSITE,google-gemini,🔍 Google # 下方 Google 规则中包含 Gemini，需要提高优先级
   - GEOIP,google,🔍 Google,no-resolve
-  - GEOSITE,google,🔍 Google
+  - GEOSITE,google,🔍 Google # 别单独分流 Gemini 了，容易报国家地区不支持
   - GEOSITE,openai,💬 OpenAI
   - GEOSITE,category-ai-!cn,💬 OpenAI
   - GEOSITE,microsoft,Ⓜ️ Microsoft # 包含 Azure OpenAI，需放到 AI 下方
@@ -177,6 +240,7 @@ rules:
   - GEOSITE,paypal,💰 PayPal
 
   - PROCESS-NAME,chrome.exe, 🇺🇸 美国自动 # 作为日常使用的软件（chrome, helium.computer），先尊重规则，再兜底
+  - PROCESS-NAME,SunBrowser.exe, 🎭 Mask # 由于经常使用该指纹浏览器用于 ChatGPT，所以移至底部，先尊重规则，再兜底，需要高优先级建议使用 listeners 单独指定节点
 
   - GEOIP,private,DIRECT,no-resolve
   - GEOSITE,private,DIRECT
