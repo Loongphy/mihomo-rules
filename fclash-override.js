@@ -60,7 +60,7 @@ const main = (config) => {
             type: "select",
             proxies: [
                 "🚀 默认",
-                "💸 低倍率自动",
+                "💸 低倍率",
                 "🇭🇰 香港",
                 "🇯🇵 日本",
                 "🇹🇼 台湾",
@@ -142,13 +142,22 @@ const main = (config) => {
             proxies: ["🇺🇸 美国", "🇸🇬 新加坡", "🇯🇵 日本"],
         },
         {
+            name: "💸 低倍率",
+            type: "select",
+            "include-all": true,
+            tolerance: 100,
+            interval: 300,
+            filter: "(?i)(?=.*?(0\\.\\d+\\s*(x|倍)|x\\s*0\\.\\d+)).*$",
+            "exclude-filter": "(?=.*?(下载|中转)).*$",
+        },
+        {
             name: "💸 低倍率自动",
             type: "url-test",
             "include-all": true,
             tolerance: 100,
             interval: 300,
             filter: "(?i)(?=.*?(0\\.\\d+\\s*(x|倍)|x\\s*0\\.\\d+)).*$",
-            "exclude-filter": "(?=.*?(下载|送中|中转)).*$",
+            "exclude-filter": "(?=.*?(下载|中转)).*$",
         },
         {
             name: "🇭🇰 香港自动",
@@ -210,15 +219,25 @@ const main = (config) => {
             "include-all": true,
             "exclude-filter": "(?=.*?(流量|剩余|期|company-network|备用)).*$",
         },
+        {
+            name: "低延迟",
+            type: "url-test",
+            "include-all": true,
+            tolerance: 100,
+            interval: 300,
+            filter: "(?i)(香港|港|HK|Hong\\s?Kong|HongKong|HKG|日本|日|JP|Japan|Tokyo|Osaka|TYO|KIX)",
+            "exclude-filter": "(?=.*?(下载|中转)).*$",
+        },
     ];
 
     config["rules"] = [
-        "GEOSITE, jd, DIRECT",
+        "GEOSITE, jd, DIRECT", // 优先于广告规则，避免京东白屏
         "GEOSITE, google-ads, REJECT",
         "GEOSITE, category-ads-all,REJECT",
         "DOMAIN-SUFFIX, mcdn.bilivideo.cn, REJECT", // B站 MSDN
         "DOMAIN-SUFFIX, mcdn.bilivideo.com, REJECT", // B站 MCDN
         "DOMAIN-SUFFIX, szbdyd.com,REJECT", // B站 PCDN
+        "DOMAIN, dcg.microsoft.com,DIRECT",  // 连接至 Windows
 
         "DOMAIN-SUFFIX,linux.do,🚀 默认",
         "DOMAIN-SUFFIX, browserleaks.com, 🚀 默认",

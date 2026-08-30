@@ -3,15 +3,6 @@ proxy-groups:
     type: select
     proxies: [💸 低倍率自动, 🇭🇰 香港自动, 🇯🇵 日本自动, 🇺🇸 美国自动, 🇺🇸 美国, 🇭🇰 香港, 🇯🇵 日本, 🇨🇳 台湾, 🇸🇬 新加坡, 🌐 全部, DIRECT]
 
-  - name: ⌨️ AI Editor
-    type: url-test
-    include-all: true
-    tolerance: 350
-    interval: 100
-    url: https://api2.cursor.sh
-    filter: "(?=.*?(香港|港|HK|Hong Kong|Hongkong|HKSAR|澳门|日本|日(?!利亚)|Japan|Nippon|JP|Japanese|台湾|台|Taiwan|TW|新加坡|新|Singapore|SG|Singapura)).*$"
-    exclude-filter: "(?=.*?(下载|链式|中转)).*$"
-
   - name: 💬 OpenAI
     type: select
     proxies: [🇺🇸 美国, 🇯🇵 日本, 🇸🇬 新加坡, 🌐 全部]
@@ -19,6 +10,10 @@ proxy-groups:
   - name: Ⓜ️ Microsoft
     type: select
     proxies: [🇺🇸 美国自动, DIRECT, 🚀 默认, 🇭🇰 香港, 🇯🇵 日本, 🇨🇳 台湾, 🇸🇬 新加坡, 🇺🇸 美国, 🌐 全部]
+
+  - name: 🍎 Apple
+    type: select
+    proxies: [DIRECT, 🚀 默认, 🇺🇸 美国自动, 🇭🇰 香港, 🇯🇵 日本, 🇨🇳 台湾, 🇸🇬 新加坡, 🇺🇸 美国, 🌐 全部]
 
   - name: 🔍 Google
     type: select
@@ -38,7 +33,7 @@ proxy-groups:
 
   - name: 🐦 X
     type: select
-    proxies: [🚀 默认, 🇭🇰 香港自动, 🇸🇬 新加坡自动, 🇭🇰 香港, 🇯🇵 日本, 🇨🇳 台湾, 🇸🇬 新加坡, 🇺🇸 美国, 🌐 全部]
+    proxies: [🚀 默认, 🇭🇰 香港自动, 🇯🇵 日本自动, 🇸🇬 新加坡自动, 🇭🇰 香港, 🇯🇵 日本, 🇨🇳 台湾, 🇸🇬 新加坡, 🇺🇸 美国, 🌐 全部]
 
   - name: 📘 Facebook
     type: select
@@ -56,7 +51,7 @@ proxy-groups:
     type: url-test
     include-all: true
     tolerance: 100
-    interval: 300
+    interval: 100
     filter: "(?i)(?=.*?(0\\.\\d+\\s*(x|倍)|x\\s*0\\.\\d+)).*$"
     exclude-filter: "(?=.*?(下载|送中|中转)).*$"
 
@@ -135,56 +130,82 @@ proxy-groups:
     include-all: true
     exclude-filter: "(?=.*?(流量|剩余|期|company-network|备用)).*$"
 
-# 在原有的节点上手动增加一些节点
-+proxies:
-  - name: US VPS
-    type: vless
-    server: 1.2.3.4
-    port: 1234
-    uuid: 75a3d74c-8f4e-4b2e-9c1f-3e7a8b2d5c9e
-    tls: true
-    client-fingerprint: chrome
-    servername: aws.amazon.com
-    network: tcp
-    reality-opts:
-      public-key: 123456
-    tfo: false
-    skip-cert-verify: false
-    flow: xtls-rprx-vision
+# # 在原有的节点上手动增加一些节点
+# +proxies:
+#   - name: US VPS
+#     type: vless
+#     server: 1.2.3.4
+#     port: 1234
+#     uuid: 75a3d74c-8f4e-4b2e-9c1f-3e7a8b2d5c9e
+#     tls: true
+#     client-fingerprint: chrome
+#     servername: aws.amazon.com
+#     network: tcp
+#     reality-opts:
+#       public-key: 123456
+#     tfo: false
+#     skip-cert-verify: false
+#     flow: xtls-rprx-vision
 
-# 自定义监听端口，方便指纹浏览器指定代理
-listeners:
-  - { name: us-port, type: mixed, port: 39999, proxy: 🇺🇸 美国 }
-  - { name: hk-port, type: mixed, port: 42000, proxy: 🇭🇰 香港自动 }
-  - { name: jp-port, type: mixed, port: 42001, proxy: 🇯🇵 日本自动 }
+# # 自定义监听端口，方便指纹浏览器指定代理
+# listeners:
+#   - { name: us-port, type: mixed, port: 42000, proxy: 🇺🇸 美国 }
+#   - { name: sg-port, type: mixed, port: 43000, proxy: 🇸🇬 新加坡 }
 
 rules:
   - GEOSITE,category-ads-all,REJECT
-  # - PROCESS-NAME,QQEX.exe, REJECT
   - DOMAIN-SUFFIX,mcdn.bilivideo.com,REJECT
   - DOMAIN-SUFFIX,mcdn.bilivideo.cn,REJECT
   - DOMAIN-SUFFIX,szbdyd.com,REJECT
-  - DOMAIN-SUFFIX,apple.com,DIRECT
-  - DOMAIN-SUFFIX,myhuaweicloud.com,DIRECT
+  - DOMAIN-REGEX,\.gov$,🇺🇸 美国自动
+  - GEOSITE,paypal,💰 PayPal
+  - DOMAIN-SUFFIX,afdian.com,🚀 默认
+  - DOMAIN-SUFFIX, npmjs.org, 🚀 默认
 
-  # 数字域名一般都不是啥正经网站，统一走代理
-  - DOMAIN-REGEX, ^\d+\.xyz$, 🚀 默认
-  
+  # # Codex App
+  # - AND,((PROCESS-NAME,Codex.exe),(DOMAIN-SUFFIX,openai.com)),REJECT
+  # - AND,((PROCESS-NAME,Codex.exe),(DOMAIN-SUFFIX,chatgpt.com)),REJECT
+  # - AND,((PROCESS-NAME,Codex.exe),(DOMAIN-SUFFIX,oaistatic.com)),REJECT
+
+
+  # 🪟 Windows 专属
+  # 以下是下载相关，都走直连
+  - GEOSITE,github,🚀 默认
+  # - DOMAIN-SUFFIX, winget.microsoft.com,🚀 默认
+  # - DOMAIN-SUFFIX, displaycatalog.mp.microsoft.com,🚀 默认
+  # - DOMAIN-SUFFIX, storeedgefd.dsx.mp.microsoft.com,🚀 默认
+  - DOMAIN,dcg.microsoft.com,DIRECT # Windows 手机连接
+  - DOMAIN-SUFFIX,windowsupdate.com,DIRECT
+  - DOMAIN-SUFFIX,download.windowsupdate.com,DIRECT
+  - DOMAIN-SUFFIX,update.microsoft.com,DIRECT
+  - DOMAIN-SUFFIX,delivery.mp.microsoft.com,DIRECT
+  - DOMAIN-SUFFIX,dl.delivery.mp.microsoft.com,DIRECT
+  - DOMAIN-SUFFIX,prod.do.dsp.mp.microsoft.com,DIRECT
+  - DOMAIN,tsfe.trafficshaping.dsp.mp.microsoft.com,DIRECT
+  - DOMAIN,emdl.ws.microsoft.com,DIRECT
+  - DOMAIN,adl.windows.com,DIRECT
+  - DOMAIN,definitionupdates.microsoft.com,DIRECT
+  - DOMAIN,ctldl.windowsupdate.com,DIRECT
+  - DOMAIN-SUFFIX,visualstudio.microsoft.com, DIRECT
+  - DOMAIN-SUFFIX,windows.com, DIRECT
+  - DOMAIN-SUFFIX,windows.net, DIRECT
+  - DOMAIN-SUFFIX,data.microsoft.com, DIRECT
+  - DOMAIN-SUFFIX,office.net, DIRECT
+
   # 自用的一些产品
   - DOMAIN-SUFFIX, linux.do,🚀 默认
-
   - DOMAIN-SUFFIX, browserleaks.com, 🚀 默认
-  - DOMAIN-SUFFIX, npmjs.org, 🚀 默认
+  - DOMAIN-REGEX, ^\d+\.xyz$, 🚀 默认 # 数字域名一般都不是啥正经网站，统一走代理
 
   # 指纹浏览器
   - PROCESS-NAME,AdsPower Global.exe, 🎭 Mask
   - PROCESS-NAME,HotLogin.exe, 🎭 Mask
-  - PROCESS-NAME,roxynet.exe, 🎭 Mask
-  # - PROCESS-NAME,RoxyBrowser.exe, 🎭 Mask
-  
+  # - PROCESS-NAME,roxynet.exe, 🎭 Mask
+  - PROCESS-NAME,RoxyBrowser.exe, 🎭 Mask
+
   # AI 产品
   - PROCESS-NAME,  comet.exe, 💬 OpenAI
-  # - DOMAIN-SUFFIX, kimi.com, 💬 OpenAI
+  - DOMAIN-SUFFIX, kimi.com, 💬 OpenAI
   - DOMAIN-SUFFIX, cerebras.ai, 💬 OpenAI
   - DOMAIN-SUFFIX, modal.com, 💬 OpenAI
   - DOMAIN-SUFFIX, factory.ai, 💬 OpenAI
@@ -193,32 +214,27 @@ rules:
   - DOMAIN-SUFFIX, lmarena.ai, 🎭 Mask
   - DOMAIN-SUFFIX, diabrowser.com, 🇺🇸 美国自动
   - DOMAIN-SUFFIX, slack.com, 🇺🇸 美国自动
-  - DOMAIN-SUFFIX, perplexity.ai, 🇺🇸 美国
+  - DOMAIN-SUFFIX, perplexity.ai, 💬 OpenAI
+  - DOMAIN-SUFFIX, cloud.microsoft, 🇺🇸 美国自动
+  - DOMAIN-SUFFIX, copilot.microsoft.com, 🇺🇸 美国自动
+  - DOMAIN-SUFFIX, opencode.ai, 🌐 全部 # 方便切换 IP
+  - DOMAIN-SUFFIX, openrouter.ai, 🌐 全部 # 方便切换 IP
+
+  # Kiro
+  - DOMAIN-SUFFIX, kiro.dev, 🇭🇰 香港自动
+  - PROCESS-NAME, kiro.exe, 🇭🇰 香港自动
   # Xiaomi mimo Studio
   # - AND,((PROCESS-NAME,msedge.exe),(DOMAIN-SUFFIX,xiaomi.com)),🚀 默认
   # - AND,((PROCESS-NAME,msedge.exe),(DOMAIN-SUFFIX,xiaomimimo.com)),🚀 默认
 
   # Hugging Face
-  # Hugging Face 主站/接口
-  # hf.co（git clone / 跳转等也会用到）
   - DOMAIN-SUFFIX,hf.co, ⏬ 下载
-  # 下载 CDN（会出现 cdn-lfs.* 的各种区域前缀）
-  - DOMAIN-KEYWORD,cdn-lfs, ⏬ 下载
-  # Xet 存储后端相关（常见 cas-bridge.xethub.hf.co 等）
-  - DOMAIN-KEYWORD,xethub, ⏬ 下载
+  - AND,((DOMAIN-KEYWORD,cdn-lfs),(NOT,((DOMAIN-SUFFIX,cn)))),⏬ 下载 # 下载 CDN（会出现 cdn-lfs.* 的各种区域前缀）
+  - DOMAIN-KEYWORD,xethub, ⏬ 下载 # Xet 存储后端相关（常见 cas-bridge.xethub.hf.co 等）
   # Hugging Face 镜像站
   - DOMAIN-KEYWORD,hf-mirror.com, DIRECT
+  - DOMAIN-SUFFIX, lmstudio.ai, DIRECT
 
-  # Cursor 交由 Proxifier 处理，这样 Mihomo 就不必开启 TUN
-  - DOMAIN-SUFFIX,cursor.sh,⌨️ AI Editor
-  - DOMAIN-SUFFIX,cursor.com,⌨️ AI Editor
-  - DOMAIN-SUFFIX,cursorapi.com,⌨️ AI Editor
-  - DOMAIN-SUFFIX,cursor-cdn.com,⌨️ AI Editor
-  - DOMAIN-SUFFIX,cursorapi.com,⌨️ AI Editor
-  - DOMAIN-SUFFIX,augmentcode.com,⌨️ AI Editor
-  - DOMAIN-SUFFIX,codeium.com,⌨️ AI Editor
-
-  - DOMAIN-REGEX,\.gov$,🇺🇸 美国自动
 
   - GEOSITE,youtube,📹 YouTube # Google 规则包含 Youtube，需提前
   - GEOIP,google,🔍 Google,no-resolve
@@ -228,8 +244,8 @@ rules:
   - GEOSITE,microsoft,Ⓜ️ Microsoft # 包含 Azure OpenAI，需放到 AI 下方
   - GEOSITE,x,🐦 X
   - GEOIP,twitter,🐦 X,no-resolve
-  - GEOSITE,apple@cn,DIRECT
-  - GEOIP,apple,DIRECT,no-resolve
+  - GEOSITE,apple@cn,🍎 Apple
+  - GEOIP,apple,🍎 Apple,no-resolve
   - GEOSITE,steam@cn,DIRECT
   - GEOSITE,category-games@cn,DIRECT
   - GEOSITE,telegram,📲 Telegram
@@ -237,9 +253,7 @@ rules:
   - GEOSITE,facebook,📘 Facebook
   - GEOIP,facebook,📘 Facebook,no-resolve
   - GEOSITE,instagram,📷 Instagram
-  - GEOSITE,paypal,💰 PayPal
 
-  - PROCESS-NAME,chrome.exe, 🇺🇸 美国自动 # 作为日常使用的软件（chrome, helium.computer），先尊重规则，再兜底
   - PROCESS-NAME,SunBrowser.exe, 🎭 Mask # 由于经常使用该指纹浏览器用于 ChatGPT，所以移至底部，先尊重规则，再兜底，需要高优先级建议使用 listeners 单独指定节点
 
   - GEOIP,private,DIRECT,no-resolve
