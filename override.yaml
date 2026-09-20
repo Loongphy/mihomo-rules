@@ -169,11 +169,9 @@ rules:
 
 
   # 🪟 Windows 专属
-  # 以下是下载相关，都走直连
   - GEOSITE,github,🚀 默认
-  # - DOMAIN-SUFFIX, winget.microsoft.com,🚀 默认
-  # - DOMAIN-SUFFIX, displaycatalog.mp.microsoft.com,🚀 默认
-  # - DOMAIN-SUFFIX, storeedgefd.dsx.mp.microsoft.com,🚀 默认
+  - GEOSITE,microsoft@cn,DIRECT
+  - GEOSITE,google@cn,DIRECT
   - DOMAIN,dcg.microsoft.com,DIRECT # Windows 手机连接
   - DOMAIN-SUFFIX,windowsupdate.com,DIRECT
   - DOMAIN-SUFFIX,download.windowsupdate.com,DIRECT
@@ -228,11 +226,11 @@ rules:
   # - AND,((PROCESS-NAME,msedge.exe),(DOMAIN-SUFFIX,xiaomimimo.com)),🚀 默认
 
   # Hugging Face
+  - DOMAIN-KEYWORD,hf-mirror.com, DIRECT
   - DOMAIN-SUFFIX,hf.co, ⏬ 下载
   - AND,((DOMAIN-KEYWORD,cdn-lfs),(NOT,((DOMAIN-SUFFIX,cn)))),⏬ 下载 # 下载 CDN（会出现 cdn-lfs.* 的各种区域前缀）
   - DOMAIN-KEYWORD,xethub, ⏬ 下载 # Xet 存储后端相关（常见 cas-bridge.xethub.hf.co 等）
   # Hugging Face 镜像站
-  - DOMAIN-KEYWORD,hf-mirror.com, DIRECT
   - DOMAIN-SUFFIX, lmstudio.ai, DIRECT
 
 
