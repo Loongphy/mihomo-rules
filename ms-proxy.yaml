@@ -52,6 +52,24 @@ payload:
   - DOMAIN-SUFFIX,officeapps.live.com # ocws.officeapps 等 Office 在线应用
   - DOMAIN,graph.microsoft.com        # 门户数据 API（DOMAIN 精确匹配）
   - DOMAIN,substrate.office.com       # 门户后端 API（office.com 后缀已含，冗余保险）
+  # ---- 实测 m365 页面拉取的业务域（日志/HTML/官方端点） ----
+  - DOMAIN-SUFFIX,microsoftpersonalcontent.com # OneDrive/Office 个人内容服务
+  - DOMAIN-SUFFIX,teams.microsoft.com   # Teams 网页版
+  - DOMAIN-SUFFIX,microsoftteams.com
+  - DOMAIN-SUFFIX,trouter.skype.com     # Teams/Skype 实时消息通道（网页版会调）
+  - DOMAIN-SUFFIX,onenote.com           # OneNote 网页版
+  - DOMAIN-SUFFIX,sway.com              # Sway
+  - DOMAIN-SUFFIX,sway-cdn.com
+  - DOMAIN-SUFFIX,yammer.com            # Viva Engage
+  - DOMAIN-SUFFIX,yammerusercontent.com
+  - DOMAIN-SUFFIX,microsoftstream.com   # Stream 视频
+  - DOMAIN,whiteboard.microsoft.com     # Whiteboard
+  - DOMAIN-SUFFIX,outlook.com           # 个人邮箱网页（bing 页面也引用）
+  - DOMAIN,outlook.live.com             # 邮箱 API 在 live.com 子域
+  - DOMAIN-SUFFIX,powerbi.com           # Power Platform（官方 M365 端点收录）
+  - DOMAIN-SUFFIX,powerapps.com
+  - DOMAIN-SUFFIX,powerautomate.com
+  - DOMAIN,autologon.microsoftazuread-sso.com  # 企业 SSO 自动登录
   # 可选：门户外壳静态资源（直连也能用，只是区域判定更一致）
   # - DOMAIN,res.cdn.office.net
   # - DOMAIN,shell.cdn.office.net
