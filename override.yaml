@@ -152,6 +152,26 @@ proxy-groups:
 #   - { name: us-port, type: mixed, port: 42000, proxy: 🇺🇸 美国 }
 #   - { name: sg-port, type: mixed, port: 43000, proxy: 🇸🇬 新加坡 }
 
+rule-providers:
+  # Bing/Rewards + M365 门户 + 登录态链（IP 敏感域，走代理）
+  ms-proxy:
+    type: http
+    behavior: classical
+    format: yaml
+    url: "https://cdn.jsdelivr.net/gh/Loongphy/mihomo-rules@main/ms-proxy.yaml"
+    # url: "https://raw.githubusercontent.com/Loongphy/mihomo-rules/main/ms-proxy.yaml"
+    path: ./rules/ms-proxy.yaml
+    interval: 86400
+    # proxy: 🚀 默认   # 若直连拉不动 GitHub/jsdelivr，指定一个组去拉
+  # 微软下载/更新/CDN（模式 B 用：下载直连、其余代理；模式 A 下用不到）
+  ms-download:
+    type: http
+    behavior: classical
+    format: yaml
+    url: "https://cdn.jsdelivr.net/gh/Loongphy/mihomo-rules@main/ms-download.yaml"
+    path: ./rules/ms-download.yaml
+    interval: 86400
+
 rules:
   - GEOSITE,category-ads-all,REJECT
   - DOMAIN-SUFFIX,mcdn.bilivideo.com,REJECT
@@ -170,6 +190,9 @@ rules:
 
   # 🪟 Windows 专属
   - GEOSITE,github,🚀 默认
+  # 微软分流：Bing 搜索+Rewards+M365 门户+登录链 → 代理（把 Ⓜ️Microsoft 组锁到目标节点）
+  # 其余微软（含全部下载/更新/OneDrive/Xbox）→ 直连
+  - RULE-SET,ms-proxy,Ⓜ️ Microsoft
   - GEOSITE,microsoft@cn,DIRECT
   - GEOSITE,google@cn,DIRECT
   - DOMAIN,dcg.microsoft.com,DIRECT # Windows 手机连接
@@ -213,8 +236,6 @@ rules:
   - DOMAIN-SUFFIX, diabrowser.com, 🇺🇸 美国自动
   - DOMAIN-SUFFIX, slack.com, 🇺🇸 美国自动
   - DOMAIN-SUFFIX, perplexity.ai, 💬 OpenAI
-  - DOMAIN-SUFFIX, cloud.microsoft, 🇺🇸 美国自动
-  - DOMAIN-SUFFIX, copilot.microsoft.com, 🇺🇸 美国自动
   - DOMAIN-SUFFIX, opencode.ai, 🌐 全部 # 方便切换 IP
   - DOMAIN-SUFFIX, openrouter.ai, 🌐 全部 # 方便切换 IP
 
@@ -239,7 +260,7 @@ rules:
   - GEOSITE,google,🔍 Google # 别单独分流 Gemini 了，容易报国家地区不支持
   - GEOSITE,openai,💬 OpenAI
   - GEOSITE,category-ai-!cn,💬 OpenAI
-  - GEOSITE,microsoft,Ⓜ️ Microsoft # 包含 Azure OpenAI，需放到 AI 下方
+  - GEOSITE,microsoft,DIRECT # 其余微软直连；ms-proxy 已提前捞走 bing/m365/登录链
   - GEOSITE,x,🐦 X
   - GEOIP,twitter,🐦 X,no-resolve
   - GEOSITE,apple@cn,🍎 Apple
