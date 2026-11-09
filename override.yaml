@@ -53,7 +53,7 @@ proxy-groups:
     tolerance: 100
     interval: 100
     filter: "(?i)(?=.*?(0\\.\\d+\\s*(x|倍)|x\\s*0\\.\\d+)).*$"
-    exclude-filter: "(?=.*?(下载|送中|中转)).*$"
+    exclude-filter: "(?=.*?(送中|中转)).*$"
 
   - name: 🇭🇰 香港
     type: select
@@ -66,7 +66,7 @@ proxy-groups:
     tolerance: 100
     interval: 300
     filter: "(?=.*?(香港|港|HK|Hong Kong|Hongkong|HKSAR)).*$"
-    exclude-filter: "(?=.*?(下载|链式|中转|美国)).*$"
+    exclude-filter: "(?=.*?(链式|中转|美国)).*$"
 
   - name: 🇺🇸 美国
     type: select
@@ -79,7 +79,7 @@ proxy-groups:
     tolerance: 200
     interval: 300
     filter: "(?=.*?(美国|美|美利坚|US|USA|(?i)States|(?i)America)).*$"
-    exclude-filter: "(?=.*?(下载|链式|中转|送中)).*$"
+    exclude-filter: "(?=.*?(链式|中转|送中)).*$"
 
   - name: 🇯🇵 日本
     type: select
@@ -92,7 +92,7 @@ proxy-groups:
     tolerance: 100
     interval: 300
     filter: "(?=.*?(日本|日(?!利亚)|Japan|Nippon|JP|Japanese)).*$"
-    exclude-filter: "(?=.*?(下载|链式|中转|送中)).*$"
+    exclude-filter: "(?=.*?(链式|中转|送中)).*$"
 
   - name: 🇸🇬 新加坡
     type: select
@@ -105,25 +105,12 @@ proxy-groups:
     tolerance: 200
     interval: 300
     filter: "(?=.*?(新加坡|新|Singapore|SG|Singapura)).*$"
-    exclude-filter: "(?=.*?(下载|链式|中转|送中)).*$"
+    exclude-filter: "(?=.*?(链式|中转|送中)).*$"
 
   - name: 🇨🇳 台湾
     type: select
     include-all: true
     filter: "(?=.*?(台湾|台|Taiwan|TW|Chinese Taipei)).*$"
-
-  - name: 🇮🇳 印度
-    type: select
-    include-all: true
-    filter: "(?=.*?(印度|India|Mumbai|Bombay|孟买|Delhi|New Delhi|德里|Bangalore|Bengaluru|班加罗尔|Chennai|Madras|金奈|Hyderabad|海得拉巴|Kolkata|Calcutta|加尔各答|Pune|浦那|Ahmedabad|艾哈迈达巴德|IN-)).*$"
-
-  - name: ⏬ 下载
-    type: fallback
-    include-all: true
-    tolerance: 350
-    interval: 100
-    url: https://api2.cursor.sh
-    filter: "(?=.*?(下载)).*$"
 
   - name: 🌐 全部
     type: select
@@ -163,14 +150,6 @@ rule-providers:
     path: ./rules/ms-proxy.yaml
     interval: 86400
     # proxy: 🚀 默认   # 若直连拉不动 GitHub/jsdelivr，指定一个组去拉
-  # 微软下载/更新/CDN（模式 B 用：下载直连、其余代理；模式 A 下用不到）
-  ms-download:
-    type: http
-    behavior: classical
-    format: yaml
-    url: "https://cdn.jsdelivr.net/gh/Loongphy/mihomo-rules@main/ms-download.yaml"
-    path: ./rules/ms-download.yaml
-    interval: 86400
 
 rules:
   - GEOSITE,category-ads-all,REJECT
@@ -184,9 +163,11 @@ rules:
   - DOMAIN-SUFFIX,mcdn.bilivideo.cn,REJECT
   - DOMAIN-SUFFIX,szbdyd.com,REJECT
   - DOMAIN-REGEX,\.gov$,🇺🇸 美国自动
-  - GEOSITE,paypal,💰 PayPal
   - DOMAIN-SUFFIX,afdian.com,🚀 默认
   - DOMAIN-SUFFIX, npmjs.org, 🚀 默认
+
+  # IP 跳得太频繁容易触发人机验证/风控，固定 IP 最好（锁 🇯🇵日本 组内某个节点，别用自动组）
+  - GEOSITE,discord,🇯🇵 日本
 
   # # Codex App
   # - AND,((PROCESS-NAME,Codex.exe),(DOMAIN-SUFFIX,openai.com)),REJECT
@@ -197,27 +178,8 @@ rules:
   # 🪟 Windows 专属
   - GEOSITE,github,🚀 默认
   # 微软分流：Bing 搜索+Rewards+M365 门户+登录链 → 代理（把 Ⓜ️Microsoft 组锁到目标节点）
-  # 其余微软（含全部下载/更新/OneDrive/Xbox）→ 直连
+  # 其余微软（含全部下载/更新/OneDrive/Xbox）→ 直连，见下方 GEOSITE,microsoft,DIRECT
   - RULE-SET,ms-proxy,Ⓜ️ Microsoft
-  - GEOSITE,microsoft@cn,DIRECT
-  - GEOSITE,google@cn,DIRECT
-  - DOMAIN,dcg.microsoft.com,DIRECT # Windows 手机连接
-  - DOMAIN-SUFFIX,windowsupdate.com,DIRECT
-  - DOMAIN-SUFFIX,download.windowsupdate.com,DIRECT
-  - DOMAIN-SUFFIX,update.microsoft.com,DIRECT
-  - DOMAIN-SUFFIX,delivery.mp.microsoft.com,DIRECT
-  - DOMAIN-SUFFIX,dl.delivery.mp.microsoft.com,DIRECT
-  - DOMAIN-SUFFIX,prod.do.dsp.mp.microsoft.com,DIRECT
-  - DOMAIN,tsfe.trafficshaping.dsp.mp.microsoft.com,DIRECT
-  - DOMAIN,emdl.ws.microsoft.com,DIRECT
-  - DOMAIN,adl.windows.com,DIRECT
-  - DOMAIN,definitionupdates.microsoft.com,DIRECT
-  - DOMAIN,ctldl.windowsupdate.com,DIRECT
-  - DOMAIN-SUFFIX,visualstudio.microsoft.com, DIRECT
-  - DOMAIN-SUFFIX,windows.com, DIRECT
-  - DOMAIN-SUFFIX,windows.net, DIRECT
-  - DOMAIN-SUFFIX,data.microsoft.com, DIRECT
-  - DOMAIN-SUFFIX,office.net, DIRECT
 
   # 自用的一些产品
   - DOMAIN-SUFFIX, linux.do,🚀 默认
@@ -227,8 +189,8 @@ rules:
   # 指纹浏览器
   - PROCESS-NAME,AdsPower Global.exe, 🎭 Mask
   - PROCESS-NAME,HotLogin.exe, 🎭 Mask
-  # - PROCESS-NAME,roxynet.exe, 🎭 Mask
   - PROCESS-NAME,RoxyBrowser.exe, 🎭 Mask
+  - PROCESS-NAME,xchrome.exe, 🎭 Mask
 
   # AI 产品
   - PROCESS-NAME,  comet.exe, 💬 OpenAI
@@ -242,26 +204,17 @@ rules:
   - DOMAIN-SUFFIX, diabrowser.com, 🇺🇸 美国自动
   - DOMAIN-SUFFIX, slack.com, 🇺🇸 美国自动
   - DOMAIN-SUFFIX, perplexity.ai, 💬 OpenAI
-  - DOMAIN-SUFFIX, opencode.ai, 🌐 全部 # 方便切换 IP
-  - DOMAIN-SUFFIX, openrouter.ai, 🌐 全部 # 方便切换 IP
-
-  # Kiro
-  - DOMAIN-SUFFIX, kiro.dev, 🇭🇰 香港自动
-  - PROCESS-NAME, kiro.exe, 🇭🇰 香港自动
-  # Xiaomi mimo Studio
-  # - AND,((PROCESS-NAME,msedge.exe),(DOMAIN-SUFFIX,xiaomi.com)),🚀 默认
-  # - AND,((PROCESS-NAME,msedge.exe),(DOMAIN-SUFFIX,xiaomimimo.com)),🚀 默认
+  - DOMAIN-SUFFIX, codeium.com, DIRECT
+  - DOMAIN-SUFFIX, devin.ai, 🇺🇸 美国自动
+  - DOMAIN-SUFFIX, opencode.ai, 🎭 Mask
 
   # Hugging Face
   - DOMAIN-KEYWORD,hf-mirror.com, DIRECT
-  - DOMAIN-SUFFIX,hf.co, ⏬ 下载
-  - AND,((DOMAIN-KEYWORD,cdn-lfs),(NOT,((DOMAIN-SUFFIX,cn)))),⏬ 下载 # 下载 CDN（会出现 cdn-lfs.* 的各种区域前缀）
-  - DOMAIN-KEYWORD,xethub, ⏬ 下载 # Xet 存储后端相关（常见 cas-bridge.xethub.hf.co 等）
-  # Hugging Face 镜像站
   - DOMAIN-SUFFIX, lmstudio.ai, DIRECT
 
 
   - GEOSITE,youtube,📹 YouTube # Google 规则包含 Youtube，需提前
+  - GEOSITE,google@cn,DIRECT
   - GEOIP,google,🔍 Google,no-resolve
   - GEOSITE,google,🔍 Google # 别单独分流 Gemini 了，容易报国家地区不支持
   - GEOSITE,openai,💬 OpenAI
@@ -270,7 +223,7 @@ rules:
   - GEOSITE,microsoft,DIRECT # 其余微软直连；ms-proxy/openai.azure 已提前捞走
   - GEOSITE,x,🐦 X
   - GEOIP,twitter,🐦 X,no-resolve
-  - GEOSITE,apple@cn,🍎 Apple
+  - GEOSITE,apple@cn,DIRECT
   - GEOIP,apple,🍎 Apple,no-resolve
   - GEOSITE,steam@cn,DIRECT
   - GEOSITE,category-games@cn,DIRECT
@@ -279,6 +232,7 @@ rules:
   - GEOSITE,facebook,📘 Facebook
   - GEOIP,facebook,📘 Facebook,no-resolve
   - GEOSITE,instagram,📷 Instagram
+  - GEOSITE,paypal,💰 PayPal
 
   - PROCESS-NAME,SunBrowser.exe, 🎭 Mask # 由于经常使用该指纹浏览器用于 ChatGPT，所以移至底部，先尊重规则，再兜底，需要高优先级建议使用 listeners 单独指定节点
 

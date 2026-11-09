@@ -31,13 +31,64 @@ listeners:
   - { name: jp-port, type: mixed, port: 42001, proxy: 🇯🇵 日本自动 }
 ```
 
-## 覆写规则
+## 微软分流（ms-proxy）
 
-分为两类节点：**手动选择**和**自动**，手动选择更适合用于 AI 等需要特定节点的场景，自动更适合日常使用。
+`ms-proxy.yaml` 是远程规则集（rule-provider），把"IP 区域敏感"的微软域单独捞出来走代理，其余微软域全部直连。覆写中引用方式：
 
-部分代理组会根据个人喜好调整顺序，强迫症请自行调整。
+```yaml
+rule-providers:
+  ms-proxy:
+    type: http
+    behavior: classical
+    format: yaml
+    url: "https://cdn.jsdelivr.net/gh/Loongphy/mihomo-rules@main/ms-proxy.yaml"
+    path: ./rules/ms-proxy.yaml
+    interval: 86400
 
-### 额外说明
+rules:
+  # 遥测/埋点直接拒绝（纯上报通道，不影响功能）
+  - GEOSITE,microsoft@telemetry,REJECT      # data./telemetry./applicationinsights/aria.ms/vortex 等
+  - DOMAIN-SUFFIX,aria.microsoft.com,REJECT # ARIA 管道 browser.pipe.aria
+  - DOMAIN-SUFFIX,clarity.microsoft.com,REJECT
+  - DOMAIN-SUFFIX,bat.bing.com,REJECT       # 广告点击跟踪（顺手省代理流量）
+  - DOMAIN-SUFFIX,arc.msn.com,REJECT        # MSN 广告上报
+
+  # github 必须在 microsoft 兜底前（geosite:microsoft 包含 github）
+  - GEOSITE,github,🚀 默认
+
+  # IP 区域敏感业务 → 代理（组内手动锁定目标节点，别用自动组）
+  - RULE-SET,ms-proxy,Ⓜ️ Microsoft
+
+  # Azure OpenAI（须在 GEOSITE,microsoft 直连兜底之前）
+  - DOMAIN-SUFFIX,openai.azure.com,💬 OpenAI
+
+  # 其余微软全部直连（下载/更新/OneDrive/Xbox/SharePoint/CDN）
+  - GEOSITE,microsoft,DIRECT
+```
+
+> [!NOTE]
+> `GEOSITE,microsoft` 包含 github/onedrive/xbox 等子集，顺序必须保证 github 规则在前。
+
+### 覆盖的产品
+
+| 分组 | 域名 | 说明 |
+|---|---|---|
+| Bing 搜索 + Microsoft Rewards | `bing.com` `bing.com.cn` `bing.net` `bingapis` `bingstatic` `bingvisualsearch` `dictate.ms` `engkoo.com` `microsoftapp.net` `copilot.*` | 搜索、`rewards.bing.com`、`/rewards/panelflyout`、`/msrewards/api` 全部同源覆盖；Rewards 计分要求与登录态同 IP 区域 |
+| MSA/AAD 登录态 | `login./account./signup./hip.live.com` `microsoftonline.com` `account.microsoft.com` `msauth*` `msftauth*` `msftidentity` `passport.net` `autologon.microsoftazuread-sso.com` | Rewards 与 M365 共用；刻意不含 `live.com` 后缀（`onedrive/storage.live.com` 是下载域） |
+| M365 门户 | `cloud.microsoft`（m365/word/excel/powerpoint/outlook/teams/admin…）`office.com` `office365.com` `microsoft365.com` `officeapps.live.com` `graph./substrate.*` | Copilot 区域判定走 auth+API，已全部覆盖 |
+| Office 在线应用/内容 | `microsoftpersonalcontent.com` `officeapps.live.com` `onenote.com` `sway.com` `microsoftstream.com` `whiteboard.microsoft.com` | OneDrive 个人内容、OneNote、Sway、Stream、白板 |
+| 协作 | `teams.microsoft.com` `microsoftteams.com` `trouter.skype.com` `yammer.com` `yammerusercontent.com` | Teams 网页版及消息通道、Viva Engage |
+| 邮箱 | `outlook.com` `outlook.live.com` | Outlook 网页版/API |
+| Power Platform | `powerbi.com` `powerapps.com` `powerautomate.com` | 官方 M365 端点列表收录 |
+
+### 刻意走直连的
+
+- **下载/更新/CDN**：`*.mp.microsoft.com`、`windowsupdate/update.microsoft.com`、`officecdn*`、`cdn.office.net`、`msocdn`/`msecnd`/`azureedge`、`sharepoint.com`、`onedrive/storage.live.com`、`1drv`、`xboxlive`、`blob.core.windows.net` —— 由 `GEOSITE,microsoft→DIRECT` 兜底
+- **遥测/广告**：`*.events.data.*`、`aria.microsoft.com`、`clarity.*`、`arc.msn.com`、`bat.bing.com` —— 覆写里 `REJECT`（纯上报，不影响功能）
+- **CDN/静态**：`res.cdn.office.net`、`shell.cdn.office.net`、`uhf/wcpstatic.microsoft.com` —— 直连更快，不参与区域判定
+
+
+## 额外说明
 
 - Gemini 与 Google 使用同一分组：🔍 Google 。因为 Gemini 不要求 IP 质量，但要求某些 Google 相关域名同 Gemini 请求 IP 一致，建议日用 🔍 Google 选择美国自动。
 - Youtube 可单独选择分组，不必与 Google 一致。
