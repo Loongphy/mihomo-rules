@@ -1,0 +1,88 @@
+# ============================================================
+# 微软"下载/更新/CDN"直连规则集（mihomo rule-provider, classical）
+# 用途：模式 B 中放在 microsoft 代理规则之前 → 下载流量直连
+# 来源：Microsoft 官方 Delivery Optimization / Connected Cache 端点文档
+#       https://learn.microsoft.com/windows/deployment/do/delivery-optimization-endpoints
+#       + endpoints.office.com 官方 M365 端点 JSON
+# 维护：只需少量增补，见文件末尾说明
+# ============================================================
+payload:
+  # ---------- Windows Update / 传递优化(DO) / 商店分发 ----------
+  - DOMAIN-SUFFIX,mp.microsoft.com            # *.delivery.mp、*.do.dsp、tsfe.trafficshaping、displaycatalog 全部分发子域
+  - DOMAIN-SUFFIX,windowsupdate.com
+  - DOMAIN-SUFFIX,update.microsoft.com
+  - DOMAIN-SUFFIX,download.microsoft.com
+  - DOMAIN-SUFFIX,download.prss.microsoft.com # 官方下载 CDN（*.download.prss.microsoft.com）
+  - DOMAIN-SUFFIX,software-download.microsoft.com
+  - DOMAIN-SUFFIX,packages.microsoft.com      # Linux 软件仓库
+  - DOMAIN-SUFFIX,mcr.microsoft.com           # 容器镜像仓库（镜像拉取量大）
+  - DOMAIN-SUFFIX,api.cdp.microsoft.com       # UUP 更新
+  - DOMAIN-SUFFIX,adl.windows.com
+  - DOMAIN-SUFFIX,emdl.ws.microsoft.com       # Edge/商店下载元数据
+  - DOMAIN-SUFFIX,wdcp.microsoft.com          # Defender 云
+  - DOMAIN-SUFFIX,cdn.winget.microsoft.com    # winget 源
+  - DOMAIN-SUFFIX,storeedge.microsoft.com     # 商店后端（geosite:microsoft@cn 收录）
+  - DOMAIN-SUFFIX,sdx.microsoft.com           # 商店分发
+
+  # ---------- Office / M365 应用更新与内容 CDN ----------
+  - DOMAIN-SUFFIX,officecdn.microsoft.com     # Click-to-Run 更新主体
+  - DOMAIN-SUFFIX,officecdn-microsoft-com.akamaized.net
+  - DOMAIN-SUFFIX,cdn.office.net              # c2r.ts / res / shell / statics.teams 等子域
+  - DOMAIN-SUFFIX,msocdn.com                  # Office 内容 CDN
+  - DOMAIN-SUFFIX,msecnd.net                  # 传统 MS CDN
+  - DOMAIN-SUFFIX,azureedge.net               # Azure CDN：winget/dotnet/大量下载落地
+  - DOMAIN-SUFFIX,static.microsoft            # Teams/Outlook 静态资源（.microsoft TLD）
+  - DOMAIN-SUFFIX,sfx.ms                      # Office/SharePoint 静态资源
+
+  # ---------- OneDrive / SharePoint 文件流量 ----------
+  - DOMAIN-SUFFIX,onedrive.live.com
+  - DOMAIN-SUFFIX,storage.live.com
+  - DOMAIN-SUFFIX,1drv.com
+  - DOMAIN-SUFFIX,1drv.ms                     # 分享短链 → 下载跳转
+  - DOMAIN-SUFFIX,sharepoint.com
+  - DOMAIN-SUFFIX,sharepoint-df.com
+  - DOMAIN-SUFFIX,sharepointonline.com
+
+  # ---------- Azure 存储（WSL 镜像、大文件分发的真实落地） ----------
+  - DOMAIN-SUFFIX,blob.core.windows.net
+
+  # ---------- Xbox / 商店 / 游戏 ----------
+  - DOMAIN-SUFFIX,xboxlive.com                # PC Game Pass / 商店游戏下载
+  - DOMAIN-SUFFIX,minecraft.net               # 若不用可删
+  - DOMAIN-SUFFIX,mojang.com
+
+  # ---------- 开发工具下载 ----------
+  - DOMAIN-SUFFIX,download.visualstudio.microsoft.com
+  - DOMAIN-SUFFIX,vsassets.io                 # VS 市场/扩展 CDN
+  - DOMAIN-SUFFIX,vscode-cdn.net              # VSCode
+  - DOMAIN-SUFFIX,update.code.visualstudio.com
+  - DOMAIN-SUFFIX,nuget.org                   # NuGet 包
+  - DOMAIN-SUFFIX,powershellgallery.com       # PSGallery 模块
+  - DOMAIN-SUFFIX,msedge.net                  # Edge/WebView2 更新与 CDN
+
+  # ---------- 下载跳转（仅 302 小流量，直连减少一跳） ----------
+  - DOMAIN-SUFFIX,aka.ms
+  - DOMAIN-SUFFIX,go.microsoft.com
+
+  # ---------- 网络连通性检测（必须直连，否则系统误判断网） ----------
+  - DOMAIN-SUFFIX,msftncsi.com
+  - DOMAIN-SUFFIX,msftconnecttest.com
+
+  # ---------- 下载类进程（需 TUN 等可识别进程名的模式） ----------
+  - PROCESS-NAME,WinStore.App.exe             # Microsoft Store
+  - PROCESS-NAME,XboxPcApp.exe                # Xbox 应用
+  - PROCESS-NAME,XboxApp.exe
+  - PROCESS-NAME,GamingServices.exe
+  - PROCESS-NAME,winget.exe
+  - PROCESS-NAME,MicrosoftEdgeUpdate.exe
+  - PROCESS-NAME,OfficeClickToRun.exe         # Office 更新
+  - PROCESS-NAME,TiWorker.exe                 # Windows Update 安装
+  - PROCESS-NAME,TrustedInstaller.exe
+  - PROCESS-NAME,wusa.exe                     # 独立更新包安装
+  - PROCESS-NAME,msiexec.exe                  # MSI 安装器（如嫌宽可删）
+
+# ============ 维护说明 ============
+# 什么时候需要增补：在 mihomo 日志/连接面板里看到走了代理、
+# 且是大流量的微软域名（典型特征：*.microsoft.com 的下载子域、
+# *.windows.net 存储、akamaized.net 镜像域），把 DOMAIN-SUFFIX 加进对应分组。
+# 新加的 *.microsoft.com 子域必须逐个列出——microsoft.com 本体在模式 B 里走代理。

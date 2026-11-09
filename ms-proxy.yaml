@@ -1,0 +1,70 @@
+# ============================================================
+# 微软"需走代理"规则集（mihomo rule-provider, classical）
+# 依据：抓取 www.bing.com / m365.cloud.microsoft 实际页面调用域名
+#       + v2fly domain-list-community (geosite:bing/microsoft 源数据)
+#       + 微软官方 endpoints.office.com 端点 JSON
+# 原则：凡参与"同账号登录态 / IP 区域判定 / 业务 API"的域全部代理，
+#       静态 CDN/下载域不放进此集（归 ms-download 直连）。
+# ============================================================
+payload:
+  # ================= Bing 搜索 + Rewards 业务域 =================
+  - DOMAIN-SUFFIX,bing.com            # www/cn/rewards/platform/business/bj1.api/appex/bat 全子域
+  - DOMAIN-SUFFIX,bing.com.cn         # cn 版入口
+  - DOMAIN-SUFFIX,bing.net            # r/th/mm/tse1 图片与静态 CDN（与搜索同业务链）
+  - DOMAIN-SUFFIX,bingapis.com        # 后端 API
+  - DOMAIN-SUFFIX,bingapistatistics.com
+  - DOMAIN-SUFFIX,bingstatic.com      # 页面静态资源
+  - DOMAIN-SUFFIX,bingvisualsearch.com# 以图搜图
+  - DOMAIN-SUFFIX,bingsandbox.com
+  - DOMAIN-SUFFIX,bing123.com
+  - DOMAIN-SUFFIX,dictate.ms          # 听写服务
+  - DOMAIN-SUFFIX,engkoo.com          # 必应词典
+  - DOMAIN-SUFFIX,microsoftapp.net    # bing.microsoftapp.net 等（bing.html 实测）
+  # Copilot（与 bing 同业务链，Rewards 页面常出现）
+  - DOMAIN-SUFFIX,copilot.microsoft.com
+  - DOMAIN-SUFFIX,copilot.com
+
+  # ================= MSA / AAD 登录态链 =================
+  # 注意：不能写 live.com 后缀——onedrive.live.com/storage.live.com 是下载域
+  - DOMAIN,login.live.com             # MSA 登录核心
+  - DOMAIN,account.live.com
+  - DOMAIN,signup.live.com
+  - DOMAIN-SUFFIX,hip.live.com        # 人机验证（HIP challenge）
+  - DOMAIN-SUFFIX,microsoftonline.com # login./device./ccs./loginex./passwordreset. 全认证子域
+  - DOMAIN,account.microsoft.com      # Rewards 账户页
+  - DOMAIN-SUFFIX,msauth.net          # AAD 认证辅助
+  - DOMAIN-SUFFIX,msftauth.net
+  - DOMAIN-SUFFIX,msauthimages.net
+  - DOMAIN-SUFFIX,msftauthimages.net
+  - DOMAIN-SUFFIX,msftidentity.com
+  - DOMAIN-SUFFIX,passport.net        # 旧版 MSA
+
+  # ================= m365.cloud.microsoft 门户 =================
+  # 实测 m365 页会拉取 copilot/outlook/word/excel/powerpoint.cloud.microsoft
+  # 及 teams/admin 等兄弟子域——只代理 m365 一个主机名会在门户内跳转时破链，
+  # 故推荐代理整个 cloud.microsoft 家族；若严格只要 m365 门户本体，
+  # 可只保留下一行、注释掉 cloud.microsoft。
+  - DOMAIN-SUFFIX,m365.cloud.microsoft
+  - DOMAIN-SUFFIX,cloud.microsoft     # 门户家族（推荐）
+  - DOMAIN-SUFFIX,office.com          # portal/outlook/substrate/www/support
+  - DOMAIN-SUFFIX,office365.com       # outlook.office365.com 等
+  - DOMAIN-SUFFIX,microsoft365.com    # 入口页
+  - DOMAIN-SUFFIX,officeapps.live.com # ocws.officeapps 等 Office 在线应用
+  - DOMAIN,graph.microsoft.com        # 门户数据 API（DOMAIN 精确匹配）
+  - DOMAIN,substrate.office.com       # 门户后端 API（office.com 后缀已含，冗余保险）
+  # 可选：门户外壳静态资源（直连也能用，只是区域判定更一致）
+  # - DOMAIN,res.cdn.office.net
+  # - DOMAIN,shell.cdn.office.net
+  # - DOMAIN,uhf.microsoft.com
+  # - DOMAIN,wcpstatic.microsoft.com
+
+# ============ 故意不放进来（走直连/兜底）的域 ============
+# 遥测/广告：clarity.ms、bat.bing.com(已在 bing.com)、browser.events.data.msn.com、
+#   browser.pipe.aria.microsoft.com、arc.msn.com、bingads.com、microsoftads.com、
+#   msads.net、nelreports.net、applicationinsights.io/net、aria.ms、
+#   data.microsoft.com、telemetry.microsoft.com
+#   ——纯埋点，IP 不一致不影响功能，直连省流量。
+# 静态/营销：www.microsoft.com、learn./support./partner.microsoft.com、
+#   assets.msn.com、www.msn.com、aka.ms、go.microsoft.com
+# 下载：全部归 ms-download 集。
+# ============================================================
