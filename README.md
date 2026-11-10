@@ -62,7 +62,7 @@ rules:
   # Azure OpenAI（须在 GEOSITE,microsoft 直连兜底之前）
   - DOMAIN-SUFFIX,openai.azure.com,💬 OpenAI
 
-  # 其余微软全部直连（下载/更新/OneDrive/Xbox/SharePoint/CDN）
+  # 其余微软全部直连（下载/更新/OneDrive 客户端同步/Xbox/SharePoint/CDN）
   - GEOSITE,microsoft,DIRECT
 ```
 
@@ -74,7 +74,8 @@ rules:
 | 分组 | 域名 | 说明 |
 |---|---|---|
 | Bing 搜索 + Microsoft Rewards | `bing.com` `bing.com.cn` `bing.net` `bingapis` `bingstatic` `bingvisualsearch` `dictate.ms` `engkoo.com` `microsoftapp.net` `copilot.*` | 搜索、`rewards.bing.com`、`/rewards/panelflyout`、`/msrewards/api` 全部同源覆盖；Rewards 计分要求与登录态同 IP 区域 |
-| MSA/AAD 登录态 | `login./account./signup./hip.live.com` `microsoftonline.com` `account.microsoft.com` `msauth*` `msftauth*` `msftidentity` `passport.net` `autologon.microsoftazuread-sso.com` | Rewards 与 M365 共用；刻意不含 `live.com` 后缀（`onedrive/storage.live.com` 是下载域） |
+| MSA/AAD 登录态 | `login./account./signup./hip.live.com` `microsoftonline.com` `account.microsoft.com` `msauth*` `msftauth*` `msftidentity` `passport.net` `autologon.microsoftazuread-sso.com` | Rewards 与 M365 共用；刻意不含 `live.com` 后缀（`storage.live.com` 是下载域） |
+| OneDrive 网页端 | `onedrive.live.com` | 网页外壳在大陆被 DNS 投毒，必须代理；客户端同步/下载域（`storage.live.com` `api.onedrive.com` `*.files.1drv.com` `1drv.ms`）直连可用，不代理 |
 | M365 门户 | `cloud.microsoft`（m365/word/excel/powerpoint/outlook/teams/admin…）`office.com` `office365.com` `microsoft365.com` `officeapps.live.com` `graph./substrate.*` | Copilot 区域判定走 auth+API，已全部覆盖 |
 | Office 在线应用/内容 | `microsoftpersonalcontent.com` `officeapps.live.com` `onenote.com` `sway.com` `microsoftstream.com` `whiteboard.microsoft.com` | OneDrive 个人内容、OneNote、Sway、Stream、白板 |
 | 协作 | `teams.microsoft.com` `microsoftteams.com` `trouter.skype.com` `yammer.com` `yammerusercontent.com` | Teams 网页版及消息通道、Viva Engage |
@@ -83,10 +84,26 @@ rules:
 
 ### 刻意走直连的
 
-- **下载/更新/CDN**：`*.mp.microsoft.com`、`windowsupdate/update.microsoft.com`、`officecdn*`、`cdn.office.net`、`msocdn`/`msecnd`/`azureedge`、`sharepoint.com`、`onedrive/storage.live.com`、`1drv`、`xboxlive`、`blob.core.windows.net` —— 由 `GEOSITE,microsoft→DIRECT` 兜底
+- **下载/更新/CDN**：`*.mp.microsoft.com`、`windowsupdate/update.microsoft.com`、`officecdn*`、`cdn.office.net`、`msocdn`/`msecnd`/`azureedge`、`sharepoint.com`、`storage.live.com`、`api.onedrive.com`、`*.files.1drv.com`、`1drv.ms`、`xboxlive`、`blob.core.windows.net` —— 由 `GEOSITE,microsoft→DIRECT` 兜底
 - **遥测/广告**：`*.events.data.*`、`aria.microsoft.com`、`clarity.*`、`arc.msn.com`、`bat.bing.com` —— 覆写里 `REJECT`（纯上报，不影响功能）
 - **CDN/静态**：`res.cdn.office.net`、`shell.cdn.office.net`、`uhf/wcpstatic.microsoft.com` —— 直连更快，不参与区域判定
 
+### Edge Copilot 图标显隐
+
+`msedge.exe` 每隔几分钟拉取 `edge.microsoft.com` 与 `config.edge.skype.com`（Edge 服务配置 / ECS 功能开关），**按请求 IP 下发地区功能开关**：
+
+- **直连（本仓库现状）**：CN IP → `variations_country=CN` → Copilot 侧栏图标隐藏 ✅ 想隐藏就保持直连
+- **走代理**：非 CN IP → Copilot 图标恢复
+
+如需恢复图标，把这三条加进 `ms-proxy.yaml`（或覆写 rules 中 `GEOSITE,microsoft` 之前）：
+
+```yaml
+- DOMAIN-SUFFIX,edge.microsoft.com
+- DOMAIN,config.edge.skype.com
+- DOMAIN-SUFFIX,api.cdp.microsoft.com
+```
+
+已写入 `Local State` 的 `variations_country` 可能需重启 Edge 后随下次配置下发刷新。Copilot 聊天本体域（`copilot.microsoft.com`、`copilot.com`、`sydney.bing.com`）一直在 `ms-proxy` 内，不受影响。
 
 ## 额外说明
 

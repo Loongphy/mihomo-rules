@@ -4,7 +4,7 @@
 #       + v2fly domain-list-community (geosite:bing/microsoft 源数据)
 #       + 微软官方 endpoints.office.com 端点 JSON
 # 原则：凡参与"同账号登录态 / IP 区域判定 / 业务 API"的域全部代理，
-#       静态 CDN/下载域不放进此集（归 ms-download 直连）。
+#       静态 CDN/下载域不放进此集（归 GEOSITE,microsoft 直连兜底）。
 # ============================================================
 payload:
   # ================= Bing 搜索 + Rewards 业务域 =================
@@ -25,7 +25,8 @@ payload:
   - DOMAIN-SUFFIX,copilot.com
 
   # ================= MSA / AAD 登录态链 =================
-  # 注意：不能写 live.com 后缀——onedrive.live.com/storage.live.com 是下载域
+  # 注意：不能写 live.com 后缀——storage.live.com 是下载域（直连可用）；
+  #      onedrive.live.com 被墙，已在下方单独代理
   - DOMAIN,login.live.com             # MSA 登录核心
   - DOMAIN,account.live.com
   - DOMAIN,signup.live.com
@@ -38,6 +39,15 @@ payload:
   - DOMAIN-SUFFIX,msftauthimages.net
   - DOMAIN-SUFFIX,msftidentity.com
   - DOMAIN-SUFFIX,passport.net        # 旧版 MSA
+
+  # ================= OneDrive 网页端 =================
+  # 实测（Sparkle 日志 + 本机 DNS）：onedrive.live.com 在大陆被 DNS 投毒
+  # （解析到 108.160.167.x / 199.96.61.x 等假 IP），DIRECT 连接超时，
+  # 网页外壳必须走代理；登录链（login.live.com）与个人内容 API
+  # （my.microsoftpersonalcontent.com）上下两处已覆盖。
+  # 注意：storage.live.com / api.onedrive.com / *.files.1drv.com / 1drv.ms
+  # 实测直连可达（OneDrive.exe 同步依赖），继续归 GEOSITE,microsoft 直连。
+  - DOMAIN-SUFFIX,onedrive.live.com   # 个人版网页外壳（被墙）
 
   # ================= m365.cloud.microsoft 门户 =================
   # 实测 m365 页会拉取 copilot/outlook/word/excel/powerpoint.cloud.microsoft
@@ -84,5 +94,9 @@ payload:
 #   ——纯埋点，IP 不一致不影响功能，直连省流量。
 # 静态/营销：www.microsoft.com、learn./support./partner.microsoft.com、
 #   assets.msn.com、www.msn.com、aka.ms、go.microsoft.com
-# 下载：全部归 ms-download 集。
+# OneDrive 下载/同步（直连可用）：storage.live.com、api.onedrive.com、
+#   *.files.1drv.com、1drv.ms、onedriveclucprod*.blob.core.windows.net
+# Edge 服务配置（直连可隐藏 Copilot 图标）：edge.microsoft.com、
+#   config.edge.skype.com、api.cdp.microsoft.com —— 见 README「Edge Copilot 图标显隐」
+# 下载/更新/CDN：由 GEOSITE,microsoft 兜底直连。
 # ============================================================

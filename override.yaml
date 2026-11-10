@@ -178,7 +178,7 @@ rules:
   # 🪟 Windows 专属
   - GEOSITE,github,🚀 默认
   # 微软分流：Bing 搜索+Rewards+M365 门户+登录链 → 代理（把 Ⓜ️Microsoft 组锁到目标节点）
-  # 其余微软（含全部下载/更新/OneDrive/Xbox）→ 直连，见下方 GEOSITE,microsoft,DIRECT
+  # 其余微软（含下载/更新/OneDrive 客户端同步/Xbox）→ 直连，见下方 GEOSITE,microsoft,DIRECT
   - RULE-SET,ms-proxy,Ⓜ️ Microsoft
 
   # 自用的一些产品
